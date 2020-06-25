@@ -1,0 +1,121 @@
+body {
+    margin: 0
+}
+
+h2 {
+    color: #9e61db;
+    margin-top: 2rem;
+}
+
+ul {
+    list-style: none;
+    font-size: 1.5em;
+}
+
+.footer {
+    position: absolute;
+}
+
+blockquote, dl, figure, form, ol, p, pre, table, ul {
+    margin-bottom: 0rem;
+}
+
+input {
+    padding: 0 0.5em;
+}
+
+form div {
+    float: left;
+}
+
+.fullscreen {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+.menu {
+    width: 100%;
+    margin: 0 5rem;
+}
+
+.menu>form>div {
+    background: rgba(255, 255, 255, .4);
+    border-radius: 1rem;
+}
+
+button {
+    background-color: #9e61db;
+    border: 0.1rem solid #9e61db;
+    border-radius: .4rem;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 1.1rem;
+    font-weight: 700;
+    height: 3rem;
+    letter-spacing: .1rem;
+    line-height: 2.8rem;
+    padding: 0 1.5rem;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+@media screen and (min-device-width: 720px) {
+    .graphics {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+    }
+    .menu {
+        position: fixed;
+    }
+    .menu>form>div {
+        padding: 0 0.5rem;
+        margin: 0 0.5rem;
+    }
+    .footer {
+        margin: 0 15rem 0 10rem;
+        bottom: 10px;
+    }
+}
+
+/* Style for mobile */
+
+@media screen and (min-width: 240px) and (max-device-width: 720px) {
+    .graphics {
+        float: left;
+        width: 100%;
+    }
+    h2 {
+        font-size: 1.5em;
+    }
+    ul {
+        font-size: 1.3em;
+    }
+    li {
+        margin-bottom: 0;
+    }
+    .menu {
+        background: #eee;
+        margin: 0;
+        line-height: 0.6em;
+        padding: 0 2rem 3rem 2rem;
+        font-size: 0.9em;
+        height: 100%;
+    }
+    .menu>form>div {
+        margin: 0 0.3rem;
+    }
+    .menu label, .menu1 label {
+        font-size: 0.9em;
+    }
+    .footer {
+        width: 90%;
+        padding: 0 2rem;
+        bottom: 0;
+        float: left;
+        font-size: 0.8em;
+        margin: 0;
+    }
+}
