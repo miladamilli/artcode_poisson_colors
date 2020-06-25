@@ -1,0 +1,89 @@
+<div class="graphics">
+    <svg viewBox="0 0 <%= @canvas_w %> <%= @canvas_h %>" xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink">
+        <rect x="0" y="0" width="<%= @canvas_w %>" height="<%= @canvas_h %>" fill="<%= @background %>" />
+        <%= for object <- @objects do %>
+        <circle cx="<%= object.x %>" cy="<%= object.y %>" r="<%= object.style.radius %>"
+            fill="hsla(<%= object.style.hue %>,
+            <%= object.style.saturation %>%,
+            <%= object.style.lightness %>%,
+            <%= object.style.opacity %>" />
+        <% end %>
+    </svg>
+</div>
+<div class="menu">
+    <h2>Poisson Disc Sampling & Colors</h2>
+    <form phx-change="settings">
+        <div>
+            <label for="min-dist">min distance: <%= @settings.min_dist %></label>
+            <input type="range" phx-debounce="50" min="35" max="200" step="2" style="width: 100px;"
+                value="<%= @settings.min_dist %>" name="min_dist" />
+        </div>
+    </form>
+    <form phx-change="color">
+        <div>
+            <label for="hue">hue: <%= @settings.color.hue %></label>
+            <input type="range" phx-debounce="20" min="0" max="360" step="1" style="width: 70px;"
+                value=<%= @settings.color.hue %> name="hue" />
+            <input type="range" phx-debounce="20" min="0" max="360" step="5" style="width: 70px;"
+                value=<%= @settings.color.hue_variation %> name="hue_variation" />
+        </div>
+    </form>
+    <form phx-change="color">
+        <div>
+            <label for="saturation">saturation: <%= @settings.color.saturation %></label>
+            <input type="range" phx-debounce="20" min="0" max="100" step="5" style="width: 70px;"
+                value=<%= @settings.color.saturation %> name="saturation" />
+            <input type="range" phx-debounce="20" min="0" max="100" step="5" style="width: 70px;"
+                value=<%= @settings.color.saturation_variation %> name="saturation_variation" />
+        </div>
+    </form>
+    <form phx-change="color">
+        <div>
+            <label for="lightness">lightness: <%= @settings.color.lightness %></label>
+            <input type="range" phx-debounce="20" min="0" max="100" step="1" style="width: 70px;"
+                value=<%= @settings.color.lightness %> name="lightness" />
+            <input type="range" phx-debounce="20" min="0" max="100" step="2" style="width: 70px;"
+                value=<%= @settings.color.lightness_variation %> name="lightness_variation" />
+        </div>
+    </form>
+    <form phx-change="color">
+        <div>
+            <label for="opacity">opacity: <%= @settings.color.opacity %></label>
+            <input type="range" phx-debounce="20" min="0.1" max="1.0" step="0.02" style="width: 70px;"
+                value=<%= @settings.color.opacity %> name="opacity" />
+            <input type="range" phx-debounce="20" min="0.0" max="1.0" step="0.1" style="width: 70px;"
+                value=<%= @settings.color.opacity_variation %> name="opacity_variation" />
+        </div>
+    </form>
+    <form phx-change="size">
+        <div>
+            <label for="size">size: <%= @settings.size %></label>
+            <input type="range" phx-debounce="20" min="5" max="250" step="1" style="width: 70px;"
+                value=<%= @settings.size %> name="size" />
+            <input type="range" phx-debounce="20" min="0" max="250" step="5" style="width: 70px;"
+                value=<%= @settings.size_variation %> name="size_variation" />
+        </div>
+    </form>
+    <form phx-change="background">
+        <div>
+            <fieldset>
+                <label for="background">background</label>
+                <input type="radio" name="background" value="white"
+                    <%=  if @background == "white", do: "checked=checked" %> />
+                <input type="radio" name="background" value="black"
+                    <%=  if @background == "black", do: "checked=checked" %> />
+            </fieldset>
+        </div>
+    </form>
+    <form phx-submit="save">
+        <div>
+            <button type="submit">Export image</button>
+        </div>
+    </form>
+</div>
+<div class="footer">
+    Circles are evenly randomly distributed (using <em>Poisson disc sampling</em>).<br />
+    Colors are random within a given range. First parameter = <em>base value</em>,
+    second parameter = possible <em>variation</em> from the base value.
+</div>
