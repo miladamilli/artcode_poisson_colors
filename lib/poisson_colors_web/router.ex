@@ -17,7 +17,7 @@ defmodule PoissonColorsWeb.Router do
   scope "/", PoissonColorsWeb do
     pipe_through :browser
 
-    live "/", GenerateLive, :index
+    live "/", CirclesLive, :index
   end
 
   # Other scopes may use custom stacks.

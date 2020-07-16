@@ -3,8 +3,7 @@
         xmlns:xlink="http://www.w3.org/1999/xlink">
         <rect x="0" y="0" width="<%= @canvas_w %>" height="<%= @canvas_h %>" fill="<%= @background %>" />
         <%= for object <- @objects do %>
-        <circle cx="<%= object.x %>" cy="<%= object.y %>" r="<%= object.style.radius %>"
-            fill="hsla(<%= object.style.hue %>,
+        <circle cx="<%= object.x %>" cy="<%= object.y %>" r="<%= object.style.radius %>" fill="hsla(<%= object.style.hue %>,
             <%= object.style.saturation %>%,
             <%= object.style.lightness %>%,
             <%= object.style.opacity %>" />

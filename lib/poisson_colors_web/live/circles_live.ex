@@ -1,20 +1,16 @@
-defmodule PoissonColorsWeb.GenerateLive do
+defmodule PoissonColorsWeb.CirclesLive do
   @moduledoc """
-  Poisson Disc Sampling illustration
+  Generates colorful circles using Poisson Disc Sampling algorithm.
   """
   use PoissonColorsWeb, :live_view_fullscreen
   alias PoissonColors.Style
   alias PoissonDiscSampling
 
-  # random(min_object_size, max_object_size)
-
   @export_template "lib/poisson_colors_web/templates/svg_template.eex"
-
   @path "priv/output/"
 
   @canvas_w 1920
   @canvas_h 1080
-  @min_dist 80
   @samples 10
   @color %{
     hue: 180,
@@ -29,7 +25,7 @@ defmodule PoissonColorsWeb.GenerateLive do
 
   def mount(_params, _session, socket) do
     settings = %{
-      min_dist: @min_dist,
+      min_dist: 80,
       color: @color,
       size: 60,
       size_variation: 60,
@@ -47,7 +43,7 @@ defmodule PoissonColorsWeb.GenerateLive do
       )
 
     if connected?(socket) do
-      {:ok, assign(socket, objects: generate_poisson(settings))}
+      {:ok, assign(socket, objects: generate_objects(settings))}
     else
       {:ok, assign(socket, objects: [])}
     end
@@ -55,40 +51,34 @@ defmodule PoissonColorsWeb.GenerateLive do
 
   def handle_event("settings", %{"min_dist" => min_dist}, socket) do
     min_dist = String.to_integer(min_dist)
-
     settings = %{socket.assigns.settings | min_dist: min_dist}
 
-    {:noreply,
-     assign(socket,
-       objects: generate_poisson(settings),
-       settings: settings
-     )}
+    {:noreply, assign(socket, objects: generate_objects(settings), settings: settings)}
   end
 
   def handle_event("color", color, socket) do
     color =
       color
       |> Map.delete("_target")
-      |> Map.new(fn {k, v} -> {String.to_atom(k), parse_number(v)} end)
+      |> Map.new(fn {k, v} -> {String.to_existing_atom(k), parse_number(v)} end)
 
     settings = %{socket.assigns.settings | color: Map.merge(socket.assigns.settings.color, color)}
 
     {:noreply,
      assign(socket,
        settings: settings,
-       objects: re_generate_poisson(socket.assigns.objects, settings)
+       objects: re_generate_objects(socket.assigns.objects, settings)
      )}
   end
 
   def handle_event("size", %{"size" => size, "size_variation" => size_variation}, socket) do
     size = String.to_integer(size)
     size_variation = String.to_integer(size_variation)
-
     settings = %{socket.assigns.settings | size: size, size_variation: size_variation}
 
     {:noreply,
      assign(socket,
-       objects: re_generate_poisson(socket.assigns.objects, settings),
+       objects: re_generate_objects(socket.assigns.objects, settings),
        settings: settings
      )}
   end
@@ -123,30 +113,23 @@ defmodule PoissonColorsWeb.GenerateLive do
       )
 
     File.write!(file <> ".svg", svg)
-
     System.cmd("convert", [file <> ".svg", file <> ".jpg"])
-
     File.rm!(file <> ".svg")
   end
 
-  defp re_generate_poisson(objects, settings) do
-    Enum.map(objects, fn
-      object -> %{object | style: Style.random(settings)}
-    end)
+  defp generate_objects(settings) do
+    PoissonDiscSampling.generate(settings.min_dist, @canvas_w, @canvas_h, @samples)
+    |> Enum.map(fn {x, y} -> %{x: x, y: y, style: Style.random(settings)} end)
   end
 
-  defp generate_poisson(settings) do
-    PoissonDiscSampling.generate(settings.min_dist, @canvas_w, @canvas_h, @samples)
-    |> Enum.map(fn {x, y} ->
-      %{x: x, y: y, style: Style.random(settings)}
-    end)
+  defp re_generate_objects(objects, settings) do
+    Enum.map(objects, fn object -> %{object | style: Style.random(settings)} end)
   end
 
   defp parse_number(number) do
     case Integer.parse(number) do
-      {integer, ""} -> integer
-      {0, _float} -> String.to_float(number)
-      {float, _} -> float
+      {number, ""} -> number
+      _ -> String.to_float(number)
     end
   end
 end
