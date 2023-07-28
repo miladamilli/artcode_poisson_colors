@@ -8,9 +8,7 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-## Try it online
-
-**[Poisson & Colors](https://art-code.herokuapp.com/poisson-colors)**
+## The App
 
 The app **renders circles** according to settings (minimum distance of circles, color, opacity, size). You can even **save the final image as JPG** (and maybe use it
 as a wallpaper ;-)).
